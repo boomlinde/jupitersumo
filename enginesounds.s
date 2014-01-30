@@ -1,6 +1,6 @@
 {
     tax
-    and #%11000110
+    and #%11001100
     beq noblow
     lda SNDFRAME
     and #1

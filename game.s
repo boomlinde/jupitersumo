@@ -42,13 +42,8 @@
 .var P0LASTX = $9d
 .var P1LASTX = $9e
 
-.var TEMPX_LO = $9f
-.var TEMPX_HI = $a0
-.var TEMPY_LO = $a1
-.var TEMPY_HI = $a2
-
-.var BGCOLOR = $a3
-.var SNDFRAME = $a4
+.var BGCOLOR = $9f
+.var SNDFRAME = $a0
 
 ///////////////////
 jsr game_init
