@@ -1,6 +1,4 @@
 {
-    lda SWCHA
-    eor #$ff
     tax
     and #%11000110
     beq noblow

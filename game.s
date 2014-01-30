@@ -42,8 +42,13 @@
 .var P0LASTX = $9d
 .var P1LASTX = $9e
 
-.var BGCOLOR = $9f
-.var SNDFRAME = $a0
+.var TEMPX_LO = $9f
+.var TEMPX_HI = $a0
+.var TEMPY_LO = $a1
+.var TEMPY_HI = $a2
+
+.var BGCOLOR = $a3
+.var SNDFRAME = $a4
 
 ///////////////////
 jsr game_init
@@ -218,40 +223,28 @@ scoreview:
 
     jmp screenloop
 
-reposp0:
+reposp:
     sta WSYNC
     :nop #18
     sta RESP0
     lda #$10
-    sta WSYNC
     sta HMP0
-    sta HMOVE
-    rts
-
-reposp1:
     sta WSYNC
     :nop #26
     sta RESP1
     lda #$20
-    sta WSYNC
     sta HMP1
+    sta WSYNC
     sta HMOVE
+    lda #0
+    sta HMP0
+    sta HMP1
     rts
-
-livesconv:
-    .byte 0
-    .byte %00000010
-    .byte %00001010
-    .byte %00101010
-    .byte %10101010
-
-.import source "level.s"
-
-.import source "player.s"
 
 ///////////////////////////// GAME CODE ////////////////////////////////////
 
 game1:
+.import source "movement.s"
     lda Y0_HI
     sta P0YCOUNT
     lda Y1_HI
@@ -269,6 +262,7 @@ game2:
     eor #$ff
 
 .import source "enginesounds.s"
+.import source "input.s"
 
     inc SNDFRAME
     lda BGCOLOR
@@ -302,13 +296,22 @@ game_init:
     sta COLUP0
     lda #P1COL
     sta COLUP1
-    jsr reposp0
-    jsr reposp1
+    jsr reposp
     lda #4
     sta P0LIVES
     sta P1LIVES
     rts
 
 
+livesconv:
+    .byte 0
+    .byte %00000010
+    .byte %00001010
+    .byte %00101010
+    .byte %10101010
+
+.import source "level.s"
+
+.import source "player.s"
 
 .import source "vcs/vectors.s"
