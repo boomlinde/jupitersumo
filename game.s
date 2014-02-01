@@ -47,9 +47,18 @@
 .var SNDFRAME = $a1
 
 .var COUNTDOWN = $a2
-.var EXPLOSION = $a3
+.var FINAL_COUNTDOWN = $a3
+.var EXPLOSION = $a4
+.var CRASH = $a5
+
+.var WINNER_COLOR = $a6
+.var RESET = $a7
+.var JUST_COLLIDED = $a8
 
 ///////////////////
+    lda #4
+    sta P0LIVES
+    sta P1LIVES
 jsr game_init
 
 screenloop:
@@ -182,30 +191,39 @@ postscreen:
     lda #0
     sta GRP0
     sta GRP1
+    sta PF0
+    sta PF1
+    sta PF2
     sta WSYNC
     inx
     sta WSYNC
     sta WSYNC
+    lda #0
+    sta COLUBK
+    sta VBLANK
     inx
 
 // Display lives
 scoreview:
     sta WSYNC
-    lda #2
-    sta VBLANK
-    lda #0
-    sta PF0
-    sta PF1
-    sta PF2
-
-    sta WSYNC
-    sta VBLANK // 3
     lda #P0COL
     sta COLUPF
     ldy P0LIVES     // 2
     lda livesconv,y // 3
     sta PF1         // 3
-    :nop #3
+    :nop #6
+    ldy P1LIVES     // 2
+    lda livesconv,y // 3
+    sta PF1         // 3
+    lda #P1COL
+    sta COLUPF
+    sta WSYNC
+    lda #P0COL
+    sta COLUPF
+    ldy P0LIVES     // 2
+    lda livesconv,y // 3
+    sta PF1         // 3
+    :nop #6
     ldy P1LIVES     // 2
     lda livesconv,y // 3
     sta PF1         // 3
@@ -224,19 +242,22 @@ scoreview:
 
 reposp:
     sta WSYNC
-    :nop #18
+    :nop #17
     sta RESP0
-    lda #$10
+    lda #$00
     sta HMP0
-    sta WSYNC
-    :nop #26
-    sta RESP1
-    lda #$20
-    sta HMP1
     sta WSYNC
     sta HMOVE
     lda #0
     sta HMP0
+    sta WSYNC
+    :nop #26
+    sta RESP1
+    lda #1
+    sta HMP1
+    sta WSYNC
+    sta HMOVE
+    lda #0
     sta HMP1
     rts
 
@@ -248,13 +269,77 @@ game1:
     sta P0YCOUNT
     lda Y1_HI
     sta P1YCOUNT
+    lda BGCOLOR
+    sta COLUBK
     rts
 
 game2:
+.import source "crash.s"
+    ldx CRASH
+    beq nocrash
+    stx CXCLR
+    lda EXPLOSION
+    beq no_explosion
+    tay
+    lda EXPLOSION
+    and #7
+    sta AUDF1
+    tya
+    lsr
+    lsr
+    sta BGCOLOR
+    sta AUDV1
+    dey
+    sty EXPLOSION
+no_explosion:
+    dex
+    bne norestart
+
+    lda RESET
+    beq noreset
+    lda #0
+    sta RESET
+    lda #4
+    sta P0LIVES
+    sta P1LIVES
+noreset:
+    jsr game_init
+norestart:
+    stx CRASH
+    rts
+nocrash:
+    lda COUNTDOWN
+    beq no_countdown
+    tax
+
+    ldy #12
+    sty AUDC1
+    ldy #31
+    sty AUDF1
+
+    and #$1f
+    lsr
+    lsr
+    sta AUDV1
+
+    dex
+    stx COUNTDOWN
+    bne nofinal
+    lda #20
+    sta FINAL_COUNTDOWN
+    lda #0-2
+    ldy #$68
+    sta SPEEDY0_HI
+    sta SPEEDY1_HI
+    sty SPEEDY0_LO
+    sty SPEEDY1_LO
+nofinal:
+    rts
+no_countdown:
     // Clear audio
     lda #0
     sta AUDV0
-    sta AUDC1
+    sta AUDC0
 
     // Store joystick in x
     lda SWCHA
@@ -264,9 +349,12 @@ game2:
 .import source "input.s"
 .import source "sounds.s"
 
+    ldy JUST_COLLIDED
+    beq nojc
+    dey
+    sty JUST_COLLIDED
+nojc:
     inc SNDFRAME
-    lda BGCOLOR
-    sta COLUBK
     rts
 
 game_init:
@@ -287,7 +375,8 @@ game_init:
     sta Y0_HI
     sta Y0_LO
     sta Y1_LO
-    lda #51
+    sta COLLISION_SOUND
+    lda #96
     sta Y0_HI
     sta Y1_HI
     lda #5
@@ -297,9 +386,8 @@ game_init:
     lda #P1COL
     sta COLUP1
     jsr reposp
-    lda #4
-    sta P0LIVES
-    sta P1LIVES
+    lda #$60
+    sta COUNTDOWN
     rts
 
 

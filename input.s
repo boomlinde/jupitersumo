@@ -7,6 +7,9 @@
     and #$80
     beq input_nocol
 
+    ldy JUST_COLLIDED
+    bne input_nocol
+
     // Collision energy transfer
     lda SPEEDX0_LO
     ldy SPEEDX1_LO
@@ -25,8 +28,11 @@
     ldy SPEEDY1_HI
     sta SPEEDY1_HI
     sty SPEEDY0_HI
-    lda #$10
+    lda #$f
     sta COLLISION_SOUND
+
+    lda #4
+    sta JUST_COLLIDED
 
     jmp input_nocheck
 input_nocol:

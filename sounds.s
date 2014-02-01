@@ -8,10 +8,24 @@
     sty AUDC1
     sta AUDV1
     dec COLLISION_SOUND
-    jmp col
+    jmp sound
 nocol:
+// Final countdown
+    lda FINAL_COUNTDOWN
+    beq nosound
+    tax
+    lsr
+    sta AUDV1
+    lda #23
+    sta AUDF1
+    lda #12
+    sta AUDC1
+    dex
+    stx FINAL_COUNTDOWN
+    jmp sound
+nosound:
     lda #0
     sta AUDC1
     sta AUDV1
-col:
+sound:
 }
