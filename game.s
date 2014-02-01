@@ -41,9 +41,13 @@
 .var SPEEDY1_HI = $9c
 .var P0LASTX = $9d
 .var P1LASTX = $9e
+.var COLLISION_SOUND = $9f
 
-.var BGCOLOR = $9f
-.var SNDFRAME = $a0
+.var BGCOLOR = $a0
+.var SNDFRAME = $a1
+
+.var COUNTDOWN = $a2
+.var EXPLOSION = $a3
 
 ///////////////////
 jsr game_init
@@ -258,6 +262,7 @@ game2:
 
 .import source "enginesounds.s"
 .import source "input.s"
+.import source "sounds.s"
 
     inc SNDFRAME
     lda BGCOLOR

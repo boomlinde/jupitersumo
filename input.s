@@ -25,6 +25,8 @@
     ldy SPEEDY1_HI
     sta SPEEDY1_HI
     sty SPEEDY0_HI
+    lda #$10
+    sta COLLISION_SOUND
 
     jmp input_nocheck
 input_nocol:

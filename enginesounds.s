@@ -9,7 +9,7 @@
     sta AUDC0
     lda #1
     sta AUDF0
-    lda #4
+    lda #2
     sta AUDV0
     jmp nothrust
 noblow:
@@ -20,7 +20,7 @@ noblow:
     sta AUDC0
     lda #20
     sta AUDF0
-    lda #8
+    lda #4
     sta AUDV0
 nothrust:
 }
