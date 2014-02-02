@@ -54,16 +54,20 @@
 .var WINNER_COLOR = $a6
 .var RESET = $a7
 .var JUST_COLLIDED = $a8
+.var COLOR = $a9
 
 ///////////////////
-    lda #4
-    sta P0LIVES
-    sta P1LIVES
+
+    lda #$50
+    sta WINNER_COLOR
+.import source "title.s"
+
 jsr game_init
 
 screenloop:
 :VSync()
 :VBlankBegin()
+game_start:
     lda #$5a
     sta COLUPF
 
@@ -274,6 +278,18 @@ game1:
     rts
 
 game2:
+    lda SWCHB
+    and #1
+    bne dontreset
+    lda #0
+    sta AUDC0
+    sta AUDC1
+    sta AUDV0
+    sta AUDV1
+    lda #$50
+    sta WINNER_COLOR
+    jmp game_end
+dontreset:
 .import source "crash.s"
     ldx CRASH
     beq nocrash
@@ -299,9 +315,7 @@ no_explosion:
     beq noreset
     lda #0
     sta RESET
-    lda #4
-    sta P0LIVES
-    sta P1LIVES
+    jmp game_end
 noreset:
     jsr game_init
 norestart:
@@ -376,6 +390,9 @@ game_init:
     sta Y0_LO
     sta Y1_LO
     sta COLLISION_SOUND
+    sta CRASH
+    sta EXPLOSION
+    sta BGCOLOR
     lda #96
     sta Y0_HI
     sta Y1_HI
@@ -399,7 +416,9 @@ livesconv:
     .byte %10101010
 
 .import source "level.s"
-
 .import source "player.s"
+.import source "title_left.s"
+.import source "title_right.s"
+lander_pf2: .byte 0,0,0,0,192,224,240,48,240,240,32,112
 
 .import source "vcs/vectors.s"

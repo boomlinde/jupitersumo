@@ -28,10 +28,6 @@
     and #$80
     beq nocrashp0
     dec P0LIVES
-    lda P0LIVES
-    beq nowinnerp0
-    lda #P0COL
-    sta WINNER_COLOR
 nowinnerp0:
     lda #120
     sta Y0_HI
@@ -44,10 +40,6 @@ nocrashp0:
     and #$80
     beq nocrashp1
     dec P1LIVES
-    lda P1LIVES
-    beq nowinnerp1
-    lda #P1COL
-    sta WINNER_COLOR
 nowinnerp1:
     lda #120
     sta Y1_HI
@@ -58,8 +50,20 @@ nowinnerp1:
 nocrashp1:
     lda P0LIVES
     ora P1LIVES
+    bne notboth
+    lda #$50
+    sta WINNER_COLOR
+    jmp nocrash
+notboth:
+    lda P0LIVES
+    bne checknext
+    lda #P1COL-10
+    sta WINNER_COLOR
+    jmp nocrash
+checknext:
+    lda P1LIVES
     bne nocrash
-    lda #15
+    lda #P0COL-10
     sta WINNER_COLOR
 nocrash:
 }
