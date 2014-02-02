@@ -86,7 +86,8 @@ game_start:
     sta PF0
     sta PF1
     sta PF2
-    jsr game1
+    jmp game1
+game1_done:
     ldx #0
 :VBlankEnd()
 
@@ -239,7 +240,8 @@ scoreview:
     bne scoreview
 
 :OverscanBegin()
-    jsr game2
+    jmp game2
+game2_done:
 :OverscanEnd()
 
     jmp screenloop
@@ -275,7 +277,7 @@ game1:
     sta P1YCOUNT
     lda BGCOLOR
     sta COLUBK
-    rts
+    jmp game1_done
 
 game2:
     lda SWCHB
@@ -320,7 +322,7 @@ noreset:
     jsr game_init
 norestart:
     stx CRASH
-    rts
+    jmp game2_done
 nocrash:
     lda COUNTDOWN
     beq no_countdown
@@ -348,7 +350,7 @@ nocrash:
     sty SPEEDY0_LO
     sty SPEEDY1_LO
 nofinal:
-    rts
+    jmp game2_done
 no_countdown:
     // Clear audio
     lda #0
@@ -369,7 +371,7 @@ no_countdown:
     sty JUST_COLLIDED
 nojc:
     inc SNDFRAME
-    rts
+    jmp game2_done
 
 game_init:
     lda #0

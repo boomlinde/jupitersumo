@@ -91,7 +91,7 @@ final:
 game_end:
     inc COLOR
     lda COLOR
-    and #$0f
+    and #$f
     ora WINNER_COLOR
     sta COLUPF
 :OverscanEnd()
