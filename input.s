@@ -1,7 +1,7 @@
-.var LSPEED = 10
-.var RSPEED = 0-10
-.var VSPEED = 0-16
-.var GRAVITY = 8
+.var LSPEED = 11
+.var RSPEED = 0-11
+.var VSPEED = 0-21
+.var GRAVITY = 10
 
     lda CXPPMM
     and #$80

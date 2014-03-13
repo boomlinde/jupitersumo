@@ -94,5 +94,53 @@ game_end:
     and #$f
     ora WINNER_COLOR
     sta COLUPF
+    jsr tick_music
 :OverscanEnd()
 jmp title_loop
+
+tick_music:
+    dec MUSIC_TICK
+    bne noplay
+    jsr play_music
+    lda #MUSIC_SPEED
+    sta MUSIC_TICK
+noplay:
+    lda MUSIC_COUNTER
+    cmp #6
+    beq novol
+    lda MUSIC_TICK
+    lsr
+    sta AUDV0
+novol:
+    rts
+    
+play_music:
+    ldy MUSIC_COUNTER
+    cpy #5
+    beq music_off
+    cpy #6
+    beq music_off
+    lda music_freq,y
+    sta AUDF0
+    lda #1
+    sta AUDC0
+    lda #$f
+    sta AUDV0
+    iny
+    sty MUSIC_COUNTER
+    rts
+music_off:
+    lda #0
+    sta AUDF0
+    sta AUDC0
+    sta AUDV0
+    cpy #6
+    beq noenv
+    inc MUSIC_COUNTER
+noenv:
+    rts
+
+music_freq:
+//.byte 18, 12, 13, 17
+.byte 26,23,19,17,23
+

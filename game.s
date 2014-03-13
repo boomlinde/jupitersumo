@@ -4,6 +4,8 @@
     .for (var i=0; i<x.getValue(); i++) nop
 }
 
+.var MUSIC_SPEED = 16
+
 .var P0COL = $ba
 .var P1COL = $6a
 
@@ -55,11 +57,15 @@
 .var RESET = $a7
 .var JUST_COLLIDED = $a8
 .var COLOR = $a9
+.var MUSIC_COUNTER = $aa
+.var MUSIC_TICK = $ab
 
 ///////////////////
 
     lda #$50
     sta WINNER_COLOR
+    lda #1
+    sta MUSIC_TICK
 .import source "title.s"
 
 jsr game_init
@@ -250,21 +256,13 @@ reposp:
     sta WSYNC
     :nop #17
     sta RESP0
-    lda #$00
-    sta HMP0
     sta WSYNC
-    sta HMOVE
-    lda #0
-    sta HMP0
-    sta WSYNC
-    :nop #26
+    :nop #27
     sta RESP1
-    lda #1
+    lda #$50
     sta HMP1
     sta WSYNC
     sta HMOVE
-    lda #0
-    sta HMP1
     rts
 
 ///////////////////////////// GAME CODE ////////////////////////////////////
@@ -339,12 +337,13 @@ nocrash:
     sta AUDV1
 
     dex
+    dex
     stx COUNTDOWN
     bne nofinal
     lda #20
     sta FINAL_COUNTDOWN
     lda #0-2
-    ldy #$68
+    ldy #$48
     sta SPEEDY0_HI
     sta SPEEDY1_HI
     sty SPEEDY0_LO
@@ -395,6 +394,12 @@ game_init:
     sta CRASH
     sta EXPLOSION
     sta BGCOLOR
+    sta MUSIC_COUNTER
+    sta AUDC0
+    sta AUDF0
+    sta AUDV0
+    lda #1
+    sta MUSIC_TICK
     lda #96
     sta Y0_HI
     sta Y1_HI
@@ -408,7 +413,6 @@ game_init:
     lda #$60
     sta COUNTDOWN
     rts
-
 
 livesconv:
     .byte 0
