@@ -398,6 +398,8 @@ game_init:
     sta AUDC0
     sta AUDF0
     sta AUDV0
+    sta SWACNT
+    sta SWBCNT
     lda #1
     sta MUSIC_TICK
     lda #96
