@@ -1,6 +1,6 @@
-.var LSPEED = 11
-.var RSPEED = 0-11
-.var VSPEED = 0-21
+.var LSPEED = 9
+.var RSPEED = 0-9
+.var VSPEED = 0-20
 .var GRAVITY = 10
 
     lda CXPPMM
