@@ -1,4 +1,4 @@
-{
+!zone {
     tax
     and #%11001100
     beq noblow
@@ -12,7 +12,7 @@
     lda #2
     sta AUDV0
     jmp nothrust
-noblow:
+noblow
     txa
     and #$11
     beq nothrust
@@ -22,5 +22,5 @@ noblow:
     sta AUDF0
     lda #4
     sta AUDV0
-nothrust:
+nothrust
 }

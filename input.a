@@ -1,7 +1,7 @@
-.var LSPEED = 9
-.var RSPEED = 0-9
-.var VSPEED = 0-20
-.var GRAVITY = 10
+LSPEED = 9
+RSPEED = 0-9
+VSPEED = 0-20
+GRAVITY = 10
 
     lda CXPPMM
     and #$80
@@ -10,7 +10,7 @@
     ldy JUST_COLLIDED
     bne input_nocol
 
-    // Collision energy transfer
+    ; Collision energy transfer
     lda SPEEDX0_LO
     ldy SPEEDX1_LO
     sta SPEEDX1_LO
@@ -35,11 +35,11 @@
     sta JUST_COLLIDED
 
     jmp input_nocheck
-input_nocol:
-{ // player 0
+input_nocol
+!zone { ; player 0
     txa
-    and #$10 // Up button
-    beq noup
+    and #$10 ; Up button
+    beq .noup
     clc
     lda SPEEDY0_LO
     adc #<VSPEED
@@ -47,11 +47,11 @@ input_nocol:
     lda SPEEDY0_HI
     adc #>VSPEED
     sta SPEEDY0_HI
-noup:
+.noup
 
     txa
-    and #$80 // Right button
-    beq nor
+    and #$80 ; Right button
+    beq .nor
     clc
     lda SPEEDX0_LO
     adc #<RSPEED
@@ -60,12 +60,12 @@ noup:
     sta P0LASTX
     adc #>RSPEED
     sta SPEEDX0_HI
-    jmp nohor
+    jmp .nohor
 
-nor:
+.nor
     txa
-    and #$40 // Left button
-    beq nohor
+    and #$40 ; Left button
+    beq .nohor
     clc
     lda SPEEDX0_LO
     adc #<LSPEED
@@ -74,13 +74,13 @@ nor:
     sta P0LASTX
     adc #>LSPEED
     sta SPEEDX0_HI
-nohor:
+.nohor
 }
 
-{ // player 1
+!zone { ; player 1
     txa
-    and #1 // Up button
-    beq noup
+    and #1 ; Up button
+    beq .noup
     clc
     lda SPEEDY1_LO
     adc #<VSPEED
@@ -88,11 +88,11 @@ nohor:
     lda SPEEDY1_HI
     adc #>VSPEED
     sta SPEEDY1_HI
-noup:
+.noup
 
     txa
-    and #8 // Right button
-    beq nor
+    and #8 ; Right button
+    beq .nor
     clc
     lda SPEEDX1_LO
     adc #<RSPEED
@@ -101,12 +101,12 @@ noup:
     sta P1LASTX
     adc #>RSPEED
     sta SPEEDX1_HI
-    jmp nohor
+    jmp .nohor
 
-nor:
+.nor
     txa
-    and #4 // Left button
-    beq nohor
+    and #4 ; Left button
+    beq .nohor
     clc
     lda SPEEDX1_LO
     adc #<LSPEED
@@ -115,13 +115,13 @@ nor:
     sta P1LASTX
     adc #>LSPEED
     sta SPEEDX1_HI
-nohor:
+.nohor
 }
 
-input_nocheck:
+input_nocheck
     sta CXCLR
 
-{ // Gravity p0
+; Gravity p0
     clc
     lda SPEEDY0_LO
     adc #<GRAVITY
@@ -129,9 +129,8 @@ input_nocheck:
     lda SPEEDY0_HI
     adc #>GRAVITY
     sta SPEEDY0_HI
-}
 
-{ // Gravity p1
+; Gravity p1
     clc
     lda SPEEDY1_LO
     adc #<GRAVITY
@@ -139,5 +138,3 @@ input_nocheck:
     lda SPEEDY1_HI
     adc #>GRAVITY
     sta SPEEDY1_HI
-}
-

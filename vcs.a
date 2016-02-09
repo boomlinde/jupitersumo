@@ -1,0 +1,154 @@
+VSYNC = $00
+VBLANK = $01
+WSYNC = $02
+RSYNC = $03
+NUSIZ0 = $04
+NUSIZ1 = $05
+COLUP0 = $06
+COLUP1 = $07
+COLUPF = $08
+COLUBK = $09
+CTRLPF = $0A
+REFP0 = $0B
+REFP1 = $0C
+PF0 = $0D
+PF1 = $0E
+PF2 = $0F
+RESP0 = $10
+RESP1 = $11
+RESM0 = $12
+RESM1 = $13
+RESBL = $14
+AUDC0 = $15
+AUDC1 = $16
+AUDF0 = $17
+AUDF1 = $18
+AUDV0 = $19
+AUDV1 = $1A
+GRP0 = $1B
+GRP1 = $1C
+ENAM0 = $1D
+ENAM1 = $1E
+ENABL = $1F
+HMP0 = $20
+HMP1 = $21
+HMM0 = $22
+HMM1 = $23
+HMBL = $24
+VDELP0 = $25
+VDELP1 = $26
+VDELBL = $27
+RESMP0 = $28
+RESMP1 = $29
+HMOVE = $2A
+HMCLR = $2B
+CXCLR = $2C
+CXM0P = $30
+CXM1P = $31
+CXP0FB = $32
+CXP1FB = $33
+CXM0FB = $34
+CXM1FB = $35
+CXBLPF = $36
+CXPPMM = $37
+INPT0 = $38
+INPT1 = $39
+INPT2 = $3A
+INPT3 = $3B
+INPT4 = $3C
+INPT5 = $3D
+SWCHA = $0280
+SWACNT = $0281
+SWCHB = $0282
+SWBCNT = $0283
+INTIM = $0284
+INSTAT = $0285
+TIM1T = $0294
+TIM8T = $0295
+TIM64T = $0296
+T1024T = $0297
+
+!macro PAL {
+VBLANK_LINES = 45
+PICTURE_LINES = 228
+OVERSCAN_LINES = 36
+VBLANK_TIMER = VBLANK_LINES*75/64
+OVERSCAN_TIMER = OVERSCAN_LINES*75/64
+}
+
+!macro NTSC {
+VBLANK_LINES = 37
+PICTURE_LINES = 192
+OVERSCAN_LINES = 30
+VBLANK_TIMER = VBLANK_LINES*75/64
+OVERSCAN_TIMER = OVERSCAN_LINES*75/64
+}
+
+
+!macro VSync {
+	lda #2
+	sta VSYNC
+	sta WSYNC
+	sta WSYNC
+	sta WSYNC
+	lda #0
+	sta VSYNC
+	sta WSYNC
+}
+
+!macro VBlankBegin {
+	lda #VBLANK_TIMER
+	sta TIM64T
+}
+
+!macro VBlankEnd {
+.wait
+	lda TIM64T
+	bne .wait
+	sta WSYNC
+	lda #0
+	sta VBLANK
+}
+
+!macro OverscanBegin {
+	sta WSYNC
+	lda #2
+	sta VBLANK
+	lda #OVERSCAN_TIMER
+	sta TIM64T
+	sta WSYNC
+}
+
+!macro OverscanEnd {
+.wait
+	lda TIM64T
+	bne .wait
+	sta WSYNC
+}
+
+!macro End .size {
+	!if .size = 2 {
+		* = $f7fc
+	}
+	!if .size = 4 {
+		* = $fffc
+	}
+	!word _vcs_init
+	!word _vcs_init
+}
+
+!macro Init {
+* = $f000
+_vcs_init
+	sei
+	cld
+	ldx #$ff
+	txs
+	inx
+	lda #0
+.clr
+	sta 0,x
+	dex
+	bne .clr
+}
+

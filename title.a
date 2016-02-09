@@ -1,7 +1,8 @@
-title_loop:
-title: {
-:VSync()
-:VBlankBegin()
+title_loop
+title
+!zone {
++VSync
++VBlankBegin
     lda #4
     sta P0LIVES
     sta P1LIVES
@@ -11,18 +12,18 @@ title: {
     lda INPT4
     and INPT5
     and #$80
-    bne noplay
+    bne .noplay
     jsr game_init
     jmp game_start
-noplay:
+.noplay
     sty PF0
     sty PF1
     sty PF2
     lda #5
     sta CTRLPF
-:VBlankEnd()
++VBlankEnd
 
-lander:
+.lander
     sta WSYNC
     lda lander_pf2,y
     sta PF2
@@ -33,10 +34,10 @@ lander:
     lsr
     tay
     cpx #96
-    bne lander
+    bne .lander
     ldx #0
 
-break:
+.break
     sta WSYNC
     lda #0
     sta CTRLPF
@@ -45,11 +46,11 @@ break:
     sta PF2
     inx
     cpx #24
-    bne break
+    bne .break
     ldx #0
     ldy #0
 
-title:
+.title
     sta WSYNC
     txa
     and #$f
@@ -61,7 +62,8 @@ title:
     sta PF1
     lda title_left_pf2,y
     sta PF2
-    nop nop
+    nop
+    nop
     lda title_right_pf0,y
     sta PF0
     lda title_right_pf1,y
@@ -75,9 +77,9 @@ title:
     lsr
     tay
     cpx #80
-    bne title
+    bne .title
 
-final:
+.final
     sta WSYNC
     lda #0
     sta PF0
@@ -85,36 +87,36 @@ final:
     sta PF2
     inx
     cpx #PICTURE_LINES-96-24
-    bne final
+    bne .final
 }
-:OverscanBegin()
-game_end:
++OverscanBegin
+game_end
     inc COLOR
     lda COLOR
     and #$f
     ora WINNER_COLOR
     sta COLUPF
     jsr tick_music
-:OverscanEnd()
++OverscanEnd
 jmp title_loop
 
-tick_music:
+tick_music
     dec MUSIC_TICK
     bne noplay
     jsr play_music
     lda #MUSIC_SPEED
     sta MUSIC_TICK
-noplay:
+noplay
     lda MUSIC_COUNTER
     cmp #6
     beq novol
     lda MUSIC_TICK
     lsr
     sta AUDV0
-novol:
+novol
     rts
     
-play_music:
+play_music
     ldy MUSIC_COUNTER
     cpy #5
     beq music_off
@@ -129,7 +131,7 @@ play_music:
     iny
     sty MUSIC_COUNTER
     rts
-music_off:
+music_off
     lda #0
     sta AUDF0
     sta AUDC0
@@ -137,10 +139,9 @@ music_off:
     cpy #6
     beq noenv
     inc MUSIC_COUNTER
-noenv:
+noenv
     rts
 
-music_freq:
-//.byte 18, 12, 13, 17
-.byte 26,23,19,17,23
+music_freq
+!byte 26,23,19,17,23
 

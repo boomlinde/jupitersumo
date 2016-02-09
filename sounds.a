@@ -1,5 +1,5 @@
 
-{ // Collision sound
+!zone { ; Collision sound
     lda COLLISION_SOUND
     beq nocol
     ldy #8
@@ -9,8 +9,8 @@
     sta AUDV1
     dec COLLISION_SOUND
     jmp sound
-nocol:
-// Final countdown
+nocol
+; Final countdown
     lda FINAL_COUNTDOWN
     beq nosound
     tax
@@ -23,9 +23,9 @@ nocol:
     dex
     stx FINAL_COUNTDOWN
     jmp sound
-nosound:
+nosound
     lda #0
     sta AUDC1
     sta AUDV1
-sound:
+sound
 }
