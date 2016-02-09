@@ -122,7 +122,7 @@ input_nocol
 input_nocheck
 	sta CXCLR
 
-    ; Gravity p0
+	; Gravity p0
 	clc
 	lda SPEEDY0_LO
 	adc #<GRAVITY
@@ -131,7 +131,7 @@ input_nocheck
 	adc #>GRAVITY
 	sta SPEEDY0_HI
 
-    ; Gravity p1
+	; Gravity p1
 	clc
 	lda SPEEDY1_LO
 	adc #<GRAVITY
