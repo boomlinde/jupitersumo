@@ -36,6 +36,7 @@ GRAVITY = 10
 
     jmp input_nocheck
 input_nocol
+
 !zone { ; player 0
     txa
     and #$10 ; Up button
