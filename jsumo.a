@@ -429,8 +429,7 @@ livesconv
 
 !src "level.a"
 !src "player.a"
-!src "title_left.a"
-!src "title_right.a"
+!src "titlepf.a"
 
 lander_pf2 !byte 0,0,0,0,192,224,240,48,240,240,32,112
 
