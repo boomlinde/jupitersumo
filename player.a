@@ -1,6 +1,6 @@
 player
 !byte %00111100
-!for i, 248 { !byte 0 }
+!for i, 1, 248 { !byte 0 }
 !byte %11100111
 !byte %01000010
 !byte %11111111
