@@ -8,7 +8,7 @@ arena. The first player to crash four times will lose.
 The game runs on the Atari 2600 (PAL) or a compatible emulator such as
 Stella. The source code is free to use under the terms of the MIT license.
 
-[More info](http://boomlin.de/jupitersumo.html)
+[More info](http://boomlin.de/software/jupitersumo.html)
 
 Building
 --------
